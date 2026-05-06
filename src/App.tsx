@@ -106,53 +106,51 @@ export default function App() {
       <div className="fixed inset-0 pointer-events-none z-0">
         <motion.div 
           animate={{ 
-            x: [-200, 200, -200],
-            y: [-100, 100, -100],
-            rotate: [0, 90, 0],
+            x: [-150, 150, -150],
+            y: [-80, 80, -80],
+            rotate: [0, 45, 0],
           }}
-          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-          className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] opacity-[0.08]"
+          transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+          className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] opacity-[0.12]"
         >
           <svg className="w-full h-full" viewBox="0 0 1000 1000">
             <defs>
               <linearGradient id="waveGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#000" />
-                <stop offset="40%" stopColor="#444" />
-                <stop offset="60%" stopColor="#888" />
+                <stop offset="50%" stopColor="#888" />
                 <stop offset="100%" stopColor="#fff" />
               </linearGradient>
               <filter id="blurFilter">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="40" />
+                <feGaussianBlur in="SourceGraphic" stdDeviation="30" />
               </filter>
             </defs>
-            <path d="M0 0 Q 300 900 1000 0" stroke="url(#waveGrad)" strokeWidth="120" fill="none" filter="url(#blurFilter)" />
-            <path d="M1000 1000 Q 700 100 0 1000" stroke="url(#waveGrad)" strokeWidth="180" fill="none" filter="url(#blurFilter)" />
-            <path d="M0 1000 Q 500 0 1000 1000" stroke="url(#waveGrad)" strokeWidth="80" fill="none" filter="url(#blurFilter)" />
+            <path d="M0 0 Q 500 1000 1000 0" stroke="url(#waveGrad)" strokeWidth="150" fill="none" filter="url(#blurFilter)" />
+            <path d="M1000 1000 Q 500 0 0 1000" stroke="url(#waveGrad)" strokeWidth="200" fill="none" filter="url(#blurFilter)" />
           </svg>
         </motion.div>
 
-        {/* Dynamic Animated Curves */}
-        <div className="absolute inset-0 opacity-20">
+        {/* Dynamic Animated Curves - Significantly more visible */}
+        <div className="absolute inset-0 opacity-30">
           <svg className="w-full h-full" viewBox="0 0 1000 1000" preserveAspectRatio="none">
             {[1, 2, 3, 4].map((i) => (
               <motion.path
                 key={i}
-                d={`M-100 ${250 * i} C 300 ${150 * i} 700 ${350 * i} 1100 ${250 * i}`}
+                d={`M-100 ${200 * i} C 300 ${100 * i} 700 ${300 * i} 1100 ${200 * i}`}
                 fill="none"
                 stroke="black"
-                strokeWidth="2"
+                strokeWidth="4"
                 animate={{ 
                   d: [
-                    `M-100 ${250 * i} C 300 ${150 * i} 700 ${350 * i} 1100 ${250 * i}`,
-                    `M-100 ${200 * i} C 350 ${300 * i} 650 ${100 * i} 1100 ${200 * i}`,
-                    `M-100 ${250 * i} C 300 ${150 * i} 700 ${350 * i} 1100 ${250 * i}`,
+                    `M-100 ${200 * (i + 0.2)} C 350 ${100 * i} 650 ${400 * i} 1100 ${250 * i}`,
+                    `M-100 ${250 * i} C 400 ${300 * i} 600 ${100 * i} 1100 ${200 * i}`,
+                    `M-100 ${200 * (i + 0.2)} C 350 ${100 * i} 650 ${400 * i} 1100 ${250 * i}`,
                   ]
                 }}
                 transition={{ 
-                  duration: 20 + i * 5, 
+                  duration: 15 + i * 4, 
                   repeat: Infinity, 
                   ease: "easeInOut",
-                  delay: i * 0.5
+                  delay: i * 0.8
                 }}
               />
             ))}

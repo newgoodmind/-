@@ -14,47 +14,72 @@ const DATA_FILE = path.join(__dirname, "data", "portfolio.json");
 async function startServer() {
   const app = express();
   
-  // Middlewares first
+  // Minimal logging
+  app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} ${req.method} ${req.url}`);
+    next();
+  });
+
+  // Middlewares
   app.use(cors());
   app.use(express.json());
 
-  // API Routes
-  app.get("/api/portfolio", (req, res) => {
-    console.log(`[${new Date().toISOString()}] GET /api/portfolio`);
-    try {
-      if (!fs.existsSync(DATA_FILE)) {
-        console.error("Data file missing:", DATA_FILE);
-        return res.status(404).json({ error: "Portfolio data not found" });
+  // API Routes - defined specifically and early
+  app.all("/api/portfolio", (req, res) => {
+    console.log(`[ROUTE HIT] ${req.method} /api/portfolio from ${req.ip}`);
+    
+    // Handle GET
+    if (req.method === "GET") {
+      const dataPath = path.resolve(process.cwd(), "data", "portfolio.json");
+      try {
+        if (!fs.existsSync(dataPath)) {
+          console.error("DATA FILE NOT FOUND AT:", dataPath);
+          return res.status(404).json({ error: "Portfolio data file is missing on the server storage." });
+        }
+        const raw = fs.readFileSync(dataPath, "utf-8");
+        const json = JSON.parse(raw);
+        return res.json(json);
+      } catch (err) {
+        console.error("CRITICAL ERROR IN GET /api/portfolio:", err);
+        return res.status(500).json({ error: "Server failed to process portfolio data." });
       }
-      const data = fs.readFileSync(DATA_FILE, "utf-8");
-      res.setHeader("Content-Type", "application/json");
-      res.send(data);
-    } catch (error) {
-      console.error("Server error reading portfolio:", error);
-      res.status(500).json({ error: "Internal server error" });
     }
+
+    // Handle POST (Save)
+    if (req.method === "POST") {
+      const { password, data } = req.body;
+      if (password !== "9511") {
+        return res.status(401).json({ error: "Unauthorized access attempt." });
+      }
+      try {
+        const dataPath = path.resolve(process.cwd(), "data", "portfolio.json");
+        fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
+        console.log("Portfolio data updated successfully.");
+        return res.json({ message: "Successfully updated." });
+      } catch (err) {
+        console.error("CRITICAL ERROR IN POST /api/portfolio:", err);
+        return res.status(500).json({ error: "Failed to save changes to disk." });
+      }
+    }
+
+    return res.status(405).json({ error: "Method not allowed" });
   });
 
-  app.post("/api/portfolio", (req, res) => {
-    const { password, data } = req.body;
-    if (password !== "9511") {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-    try {
-      fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-      res.json({ message: "Portfolio updated successfully" });
-    } catch (error) {
-      res.status(500).json({ error: "Failed to save portfolio data" });
-    }
-  });
+  app.get("/api/health", (req, res) => res.json({ status: "alive", time: new Date().toISOString() }));
+  app.get("/api/ping", (req, res) => res.send("pong"));
 
   app.post("/api/auth", (req, res) => {
     const { password } = req.body;
     if (password === "9511") {
-      res.json({ success: true });
-    } else {
-      res.status(401).json({ success: false });
+      return res.json({ success: true });
     }
+    return res.status(401).json({ success: false });
+  });
+
+  // Explicit 404 for other API routes to prevent falling through to SPA
+  app.use("/api/*", (req, res) => {
+    console.log(`[API 404] ${req.method} ${req.originalUrl}`);
+    res.status(404).json({ error: `API route '${req.originalUrl}' not found on this server.` });
   });
 
   // Vite middleware for development
