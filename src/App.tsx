@@ -52,12 +52,9 @@ export default function App() {
   const getYoutubeThumbnail = (url: string) => {
     if (!url) return null;
     try {
-      // Handle various YouTube URL formats
       const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
       const match = url.match(regExp);
-      
       const videoId = (match && match[2].length === 11) ? match[2] : null;
-      
       if (videoId) {
         return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
       }
@@ -65,6 +62,21 @@ export default function App() {
       console.error("Error parsing YouTube thumbnail", url, e);
     }
     return null;
+  };
+
+  const getYoutubeEmbedUrl = (url: string) => {
+    if (!url) return "";
+    try {
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      const match = url.match(regExp);
+      const videoId = (match && match[2].length === 11) ? match[2] : null;
+      if (videoId) {
+        return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+      }
+    } catch (e) {
+      console.error("Error parsing YouTube embed URL", url, e);
+    }
+    return url;
   };
 
   if (loading) {
@@ -106,31 +118,31 @@ export default function App() {
       <div className="fixed inset-0 pointer-events-none z-0">
         <motion.div 
           animate={{ 
-            x: [-150, 150, -150],
-            y: [-80, 80, -80],
+            x: [-100, 100, -100],
+            y: [-50, 50, -50],
             rotate: [0, 45, 0],
           }}
-          transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-          className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] opacity-[0.12]"
+          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+          className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] opacity-[0.08]"
         >
           <svg className="w-full h-full" viewBox="0 0 1000 1000">
             <defs>
               <linearGradient id="waveGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#000" />
-                <stop offset="50%" stopColor="#888" />
+                <stop offset="50%" stopColor="#ccc" />
                 <stop offset="100%" stopColor="#fff" />
               </linearGradient>
               <filter id="blurFilter">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="30" />
+                <feGaussianBlur in="SourceGraphic" stdDeviation="40" />
               </filter>
             </defs>
-            <path d="M0 0 Q 500 1000 1000 0" stroke="url(#waveGrad)" strokeWidth="150" fill="none" filter="url(#blurFilter)" />
-            <path d="M1000 1000 Q 500 0 0 1000" stroke="url(#waveGrad)" strokeWidth="200" fill="none" filter="url(#blurFilter)" />
+            <path d="M0 0 Q 500 1000 1000 0" stroke="url(#waveGrad)" strokeWidth="180" fill="none" filter="url(#blurFilter)" />
+            <path d="M1000 1000 Q 500 0 0 1000" stroke="url(#waveGrad)" strokeWidth="250" fill="none" filter="url(#blurFilter)" />
           </svg>
         </motion.div>
 
-        {/* Dynamic Animated Curves - Significantly more visible */}
-        <div className="absolute inset-0 opacity-30">
+        {/* Dynamic Animated Curves - Soft and sophisticated */}
+        <div className="absolute inset-0 opacity-[0.12]">
           <svg className="w-full h-full" viewBox="0 0 1000 1000" preserveAspectRatio="none">
             {[1, 2, 3, 4].map((i) => (
               <motion.path
@@ -138,7 +150,7 @@ export default function App() {
                 d={`M-100 ${200 * i} C 300 ${100 * i} 700 ${300 * i} 1100 ${200 * i}`}
                 fill="none"
                 stroke="black"
-                strokeWidth="4"
+                strokeWidth="0.8"
                 animate={{ 
                   d: [
                     `M-100 ${200 * (i + 0.2)} C 350 ${100 * i} 650 ${400 * i} 1100 ${250 * i}`,
@@ -147,7 +159,7 @@ export default function App() {
                   ]
                 }}
                 transition={{ 
-                  duration: 15 + i * 4, 
+                  duration: 25 + i * 5, 
                   repeat: Infinity, 
                   ease: "easeInOut",
                   delay: i * 0.8
@@ -256,21 +268,21 @@ export default function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-bg overflow-y-auto px-6 py-20"
+            className="fixed inset-0 z-[100] bg-white/40 backdrop-blur-3xl overflow-y-auto px-6 py-20"
           >
             <div className="container mx-auto max-w-6xl">
               <button 
                 onClick={() => setSelectedProject(null)}
-                className="fixed top-10 right-10 z-[110] p-4 glass rounded-full hover:bg-gold transition-colors text-black shadow-lg"
+                className="fixed top-10 right-10 z-[110] p-4 glass rounded-full hover:bg-gold transition-all text-black shadow-xl"
               >
                 <X size={24} />
               </button>
 
               <div className="space-y-12">
                 {/* YouTube Embed */}
-                <div className="aspect-video w-full glass relative overflow-hidden rounded-sm border border-black/10 shadow-2xl bg-black">
+                <div className="aspect-video w-full glass relative overflow-hidden rounded-sm border border-black/5 shadow-2xl bg-black/10">
                   <iframe 
-                    src={selectedProject.videoUrl}
+                    src={getYoutubeEmbedUrl(selectedProject.videoUrl)}
                     title="YouTube video player" 
                     frameBorder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -295,10 +307,6 @@ export default function App() {
                       <div className="flex justify-between items-center border-b border-black/5 pb-3">
                         <span className="text-[10px] uppercase tracking-widest text-subtext">{data.uiLabels?.role || "Role"}</span>
                         <span className="text-xs font-bold">{selectedProject.role}</span>
-                      </div>
-                      <div className="flex justify-between items-center border-b border-black/5 pb-3">
-                        <span className="text-[10px] uppercase tracking-widest text-subtext">{data.uiLabels?.impact || "Impact"}</span>
-                        <span className="text-xs font-bold text-gold">{selectedProject.result}</span>
                       </div>
                       <div className="flex justify-between items-center border-b border-black/5 pb-3">
                         <span className="text-[10px] uppercase tracking-widest text-subtext">{data.uiLabels?.credit || "Credit"}</span>
