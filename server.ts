@@ -14,22 +14,26 @@ const DATA_FILE = path.join(__dirname, "data", "portfolio.json");
 async function startServer() {
   const app = express();
   
+  // Middlewares first
+  app.use(cors());
+  app.use(express.json());
+
   // API Routes
   app.get("/api/portfolio", (req, res) => {
+    console.log(`[${new Date().toISOString()}] GET /api/portfolio`);
     try {
       if (!fs.existsSync(DATA_FILE)) {
+        console.error("Data file missing:", DATA_FILE);
         return res.status(404).json({ error: "Portfolio data not found" });
       }
       const data = fs.readFileSync(DATA_FILE, "utf-8");
-      res.json(JSON.parse(data));
+      res.setHeader("Content-Type", "application/json");
+      res.send(data);
     } catch (error) {
-      console.error("Server error:", error);
+      console.error("Server error reading portfolio:", error);
       res.status(500).json({ error: "Internal server error" });
     }
   });
-
-  app.use(cors());
-  app.use(express.json());
 
   app.post("/api/portfolio", (req, res) => {
     const { password, data } = req.body;

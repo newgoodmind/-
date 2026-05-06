@@ -19,15 +19,29 @@ export default function App() {
 
   useEffect(() => {
     const fetchData = async () => {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+
       try {
-        const res = await fetch("/api/portfolio");
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const res = await fetch("/api/portfolio", { signal: controller.signal });
+        clearTimeout(timeoutId);
+        
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(`Server returned ${res.status}: ${text.slice(0, 50)}`);
+        }
+        
         const json = await res.json();
         if (json.error) throw new Error(json.error);
         setData(json);
+        setError(null);
       } catch (err) {
         console.error("Fetch error:", err);
-        setError("Failed to connect to server");
+        if (err instanceof Error && err.name === 'AbortError') {
+          setError("Connection timeout. Please check your internet or try again.");
+        } else {
+          setError(err instanceof Error ? err.message : "Failed to connect to server");
+        }
       } finally {
         setLoading(false);
       }
@@ -55,26 +69,29 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="h-screen w-full flex flex-col items-center justify-center bg-bg gap-6 text-black">
-        <Loader2 className="animate-spin text-gold" size={40} strokeWidth={1} />
-        <span className="text-[10px] tracking-[0.6em] text-gold uppercase animate-pulse">Loading KYUSANG Portfolio</span>
+      <div className="h-screen w-full flex flex-col items-center justify-center bg-white gap-6 text-black">
+        <Loader2 className="animate-spin text-black/20" size={30} strokeWidth={1} />
+        <span className="text-[10px] tracking-[0.6em] text-black/40 uppercase">Loading</span>
       </div>
     );
   }
 
-  if (!data) {
+  if (error || !data) {
     return (
-      <div className="bg-bg min-h-screen flex flex-col items-center justify-center p-10 text-center">
+      <div className="bg-white min-h-screen flex flex-col items-center justify-center p-10 text-center">
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-6"
+          className="space-y-8 max-w-sm"
         >
-          <div className="text-2xl font-black italic tracking-tighter uppercase opacity-10">KYUSANG</div>
-          <p className="text-sm tracking-widest text-zinc-400 uppercase">Portfolio is taking a moment...</p>
+          <div className="text-3xl font-black italic tracking-tighter uppercase opacity-20">KYUSANG</div>
+          <div className="space-y-2">
+            <p className="text-xs tracking-[0.3em] font-bold text-black uppercase">Something went wrong</p>
+            <p className="text-[10px] tracking-wider text-zinc-400 uppercase leading-relaxed">{error || "Data load failed"}</p>
+          </div>
           <button 
             onClick={() => window.location.reload()}
-            className="px-8 py-3 bg-black text-white rounded-full text-[10px] uppercase tracking-[0.3em] hover:bg-gold transition-all"
+            className="px-10 py-3 bg-black text-white rounded-full text-[10px] uppercase tracking-[0.4em] hover:bg-zinc-800 transition-all shadow-xl shadow-black/5"
           >
             Refresh
           </button>
@@ -84,30 +101,69 @@ export default function App() {
   }
 
   return (
-    <div className="bg-bg text-black min-h-screen relative overflow-hidden">
-      {/* Subtle Background Elements */}
+    <div className="bg-white text-black min-h-screen relative overflow-hidden font-sans">
+      {/* Aesthetic Fluid Background - Enhanced Visibility */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <motion.div 
           animate={{ 
-            scale: [1, 1.2, 1],
-            rotate: [0, 10, 0],
-            x: [0, 50, 0],
-            y: [0, 30, 0]
+            x: [-200, 200, -200],
+            y: [-100, 100, -100],
+            rotate: [0, 90, 0],
           }}
-          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-1/4 -left-1/4 w-[80%] h-[80%] rounded-full bg-zinc-200/40 blur-[140px]"
-        />
-        <motion.div 
-          animate={{ 
-            scale: [1.2, 1, 1.2],
-            rotate: [0, -15, 0],
-            x: [0, -40, 0],
-            y: [0, -50, 0]
-          }}
-          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-1/4 -right-1/4 w-[70%] h-[70%] rounded-full bg-gold/15 blur-[140px]"
-        />
-        <div className="absolute inset-0 opacity-[0.05] mix-blend-overlay pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]" />
+          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+          className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] opacity-[0.08]"
+        >
+          <svg className="w-full h-full" viewBox="0 0 1000 1000">
+            <defs>
+              <linearGradient id="waveGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#000" />
+                <stop offset="40%" stopColor="#444" />
+                <stop offset="60%" stopColor="#888" />
+                <stop offset="100%" stopColor="#fff" />
+              </linearGradient>
+              <filter id="blurFilter">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="40" />
+              </filter>
+            </defs>
+            <path d="M0 0 Q 300 900 1000 0" stroke="url(#waveGrad)" strokeWidth="120" fill="none" filter="url(#blurFilter)" />
+            <path d="M1000 1000 Q 700 100 0 1000" stroke="url(#waveGrad)" strokeWidth="180" fill="none" filter="url(#blurFilter)" />
+            <path d="M0 1000 Q 500 0 1000 1000" stroke="url(#waveGrad)" strokeWidth="80" fill="none" filter="url(#blurFilter)" />
+          </svg>
+        </motion.div>
+
+        {/* Dynamic Animated Curves */}
+        <div className="absolute inset-0 opacity-20">
+          <svg className="w-full h-full" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+            {[1, 2, 3, 4].map((i) => (
+              <motion.path
+                key={i}
+                d={`M-100 ${250 * i} C 300 ${150 * i} 700 ${350 * i} 1100 ${250 * i}`}
+                fill="none"
+                stroke="black"
+                strokeWidth="2"
+                animate={{ 
+                  d: [
+                    `M-100 ${250 * i} C 300 ${150 * i} 700 ${350 * i} 1100 ${250 * i}`,
+                    `M-100 ${200 * i} C 350 ${300 * i} 650 ${100 * i} 1100 ${200 * i}`,
+                    `M-100 ${250 * i} C 300 ${150 * i} 700 ${350 * i} 1100 ${250 * i}`,
+                  ]
+                }}
+                transition={{ 
+                  duration: 20 + i * 5, 
+                  repeat: Infinity, 
+                  ease: "easeInOut",
+                  delay: i * 0.5
+                }}
+              />
+            ))}
+          </svg>
+        </div>
+
+        <div className="absolute inset-x-0 top-0 h-64 bg-gradient-to-b from-white via-white/80 to-transparent z-[1]" />
+        <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-white via-white/80 to-transparent z-[1]" />
+        
+        {/* Fine Grain / Paper Texture */}
+        <div className="absolute inset-0 opacity-[0.03] mix-blend-multiply pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')] z-[2]" />
       </div>
 
       {/* Main Content */}
