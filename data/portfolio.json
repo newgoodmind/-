@@ -1,0 +1,154 @@
+{
+  "hero": {
+    "title": "이규상",
+    "subtitle": "영상 제작자 / PD",
+    "description": "렌즈 앞과 뒤를 모두 아는 제작자.\n\n기획부터 촬영·편집·채널 운영까지\n출연자의 감정을 읽고 콘텐츠를 완성합니다.",
+    "cta": "브랜드의 메시지를 영상 언어로 설계합니다.",
+    "links": [
+      {
+        "label": "Portfolio PDF",
+        "url": "#"
+      },
+      {
+        "label": "Contact",
+        "url": "#contact"
+      }
+    ]
+  },
+  "about": {
+    "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop",
+    "title": "기획하고, 촬영하고, 편집합니다.",
+    "description": "콘텐츠의 시작부터 완성까지 전체 흐름을 설계하는 영상 PD입니다.",
+    "cards": [
+      {
+        "title": "영상기획",
+        "icon": "Lightbulb"
+      },
+      {
+        "title": "촬영디렉팅",
+        "icon": "Camera"
+      },
+      {
+        "title": "편집",
+        "icon": "Scissors"
+      },
+      {
+        "title": "브랜디드 콘텐츠",
+        "icon": "Play"
+      },
+      {
+        "title": "유튜브 운영",
+        "icon": "Youtube"
+      }
+    ]
+  },
+  "featured": [
+    {
+      "id": "1",
+      "title": "강화도 달모루 캠핑장 브랜디드",
+      "role": "기획 / 촬영 / 편집",
+      "contribution": "100%",
+      "result": "조회수 1.2M+ 돌파",
+      "description": "자연 속 캠핑장의 아름다운 전경과 함께 달모루 카페의 감성적인 분위기,  정성스럽게 내려지는 커피의 모습을 담았습니다.",
+      "videoUrl": "https://youtu.be/QMpjjjR4fdc",
+      "thumbnail": "https://youtu.be/QMpjjjR4fdc"
+    },
+    {
+      "id": "2",
+      "title": "[박카스X광고영상제] 피로를 해피로 바까스!",
+      "role": "기획 / 촬영 / 편집",
+      "contribution": "90%",
+      "result": "Vogue Korea Featured",
+      "description": "「동아제약 협업 교내 학술제」 최우수상 수상작.\n\n일상의 피로를 행복으로 전환하는 박카스 광고영상.\n\n박카스의 브랜드 메시지를 감각적이고 긍정적으로 표현한 광고영상입니다.",
+      "videoUrl": "https://youtu.be/MBsM9YCWCYs",
+      "thumbnail": "https://youtu.be/MBsM9YCWCYs"
+    },
+    {
+      "id": "3",
+      "title": "Instargram",
+      "role": "기획 / 촬영 / 편집",
+      "contribution": "100%",
+      "result": "Brand Awareness +40%",
+      "description": "지나간 추억과 공허함을 서정적으로 그려낸 뮤직비디오.\n\n이별 후 느끼는 공허와 외로움을 차갑고 쓸쓸한 영상미로 담담하게 표현한 서정적 뮤직비디오입니다.\n절제된 연출을 통해 음악의 감성을 더욱 깊이 있게 전달하고자 했습니다.",
+      "videoUrl": "https://youtu.be/djIpLbGPo_s",
+      "thumbnail": "https://youtu.be/djIpLbGPo_s"
+    },
+    {
+      "id": "4",
+      "title": "VHS",
+      "role": "기획 / 촬영 / 편집",
+      "contribution": "90%",
+      "result": "Award Nominee",
+      "description": "VHS의 아날로그 감성으로 평범한 일상을 감각적으로 표현한 뮤직비디오.\n\nVHS 특유의 거칠고 아날로그적인 질감을 활용하여 평범한 하루의 순간들을 담아낸 뮤직비디오입니다. \n일상의 장면과 음악이 어우러져 편안하면서도 묘한 향수를 불러일으킵니다.",
+      "videoUrl": "https://youtu.be/8zaDFDcUi6Q",
+      "thumbnail": "https://youtu.be/8zaDFDcUi6Q"
+    },
+    {
+      "id": "7ylqqjr3v",
+      "title": "청년 정신건강 인식개선 영상 공모전",
+      "role": "기획 / 촬영 / 편집",
+      "contribution": "100%",
+      "result": "Result here",
+      "description": "청년들의 내면적 어려움을 진솔하게 담아낸 「정신건강 인식개선 공모전」 우수상 수상작\n\n울산광역시 정신건강복지센터 주최 『청년 정신건강 인식개선 영상 공모전』 우수상 수상작으로, \n정신적 어려움을 겪는 청년들의 고민과 내면을 섬세한 연출로 담아냈습니다. ",
+      "videoUrl": "https://youtu.be/Z1tTiLpiZY0",
+      "thumbnail": "https://youtu.be/Z1tTiLpiZY0"
+    },
+    {
+      "id": "ew12b825o",
+      "title": "요플레 Yoplay",
+      "role": "기획 / 촬영 / 편집",
+      "contribution": "100%",
+      "result": "Result here",
+      "description": "일상을 요리하다, 음악과 함께하는 편안한 요리 플레이리스트 Vlog",
+      "videoUrl": "https://youtu.be/pXtWe7DcPFE?si=bJtrsUz9xmDe3aiH",
+      "thumbnail": "https://youtu.be/pXtWe7DcPFE?si=bJtrsUz9xmDe3aiH"
+    }
+  ],
+  "archive": [],
+  "skills": [
+    "Creative Direction",
+    "Storyboarding",
+    "Interview directing",
+    "Sony Cinema Line",
+    "Color grading",
+    "Premiere Pro",
+    "After Effects",
+    "Photoshop"
+  ],
+  "process": [
+    {
+      "step": "01",
+      "title": "Research",
+      "description": "브랜드의 본질과 타겟 오디언스의 니즈를 분석하여 기획의 초석을 다집니다."
+    },
+    {
+      "step": "02",
+      "title": "Planning",
+      "description": "확보된 인사이트를 바탕으로 스토리보드 구성 및 제작 스케줄을 수립합니다."
+    },
+    {
+      "step": "03",
+      "title": "Production",
+      "description": "현장 디렉팅을 통해 기획 의도가 담긴 최상의 컷들을 확보합니다."
+    },
+    {
+      "step": "04",
+      "title": "Edit & Delivery",
+      "description": "감각적인 편집과 정밀한 색보정으로 최종 완성도를 극대화합니다."
+    }
+  ],
+  "contact": {
+    "title": "좋은 프로젝트는 좋은 대화에서 시작됩니다.",
+    "subtitle": "Contact Me",
+    "email": "dlrbtkd951@naver.com",
+    "instagram": "@1eetkd",
+    "youtube": "https://youtube.com/@1eetkd951?si=aaJvUnSHh6Fj5cbM"
+  },
+  "uiLabels": {
+    "viewCase": "View Case",
+    "selectedProject": "Selected Project",
+    "role": "Role",
+    "impact": "Impact",
+    "credit": "Credit"
+  }
+}
