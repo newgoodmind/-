@@ -3,9 +3,13 @@ import { createServer as createViteServer } from "vite";
 import fs from "fs";
 import path from "path";
 import cors from "cors";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const PORT = 3000;
-const DATA_FILE = path.join(process.cwd(), "data", "portfolio.json");
+const DATA_FILE = path.join(__dirname, "data", "portfolio.json");
 
 async function startServer() {
   const app = express();
@@ -15,10 +19,21 @@ async function startServer() {
   // API Routes
   app.get("/api/portfolio", (req, res) => {
     try {
+      if (!fs.existsSync(DATA_FILE)) {
+        console.error(`Portfolio file not found at: ${DATA_FILE}`);
+        return res.status(404).json({ error: "Portfolio data file not found on server" });
+      }
       const data = fs.readFileSync(DATA_FILE, "utf-8");
-      res.json(JSON.parse(data));
+      try {
+        const parsed = JSON.parse(data);
+        res.json(parsed);
+      } catch (parseError) {
+        console.error("Failed to parse portfolio.json:", parseError);
+        res.status(500).json({ error: "Portfolio data is corrupted (invalid JSON)" });
+      }
     } catch (error) {
-      res.status(500).json({ error: "Failed to read portfolio data" });
+      console.error("Server error reading portfolio:", error);
+      res.status(500).json({ error: "Failed to read portfolio data from disk" });
     }
   });
 
@@ -52,12 +67,15 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(process.cwd(), "dist");
+    const distPath = path.join(__dirname, "dist");
     app.use(express.static(distPath));
     app.get("*", (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
     });
   }
+
+  console.log("Data file path:", DATA_FILE);
+  console.log("File exists:", fs.existsSync(DATA_FILE));
 
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on http://localhost:${PORT}`);

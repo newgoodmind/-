@@ -13,6 +13,7 @@ import { PortfolioData, FeaturedProject } from "./types";
 export default function App() {
   const [data, setData] = useState<PortfolioData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [showAdmin, setShowAdmin] = useState(false);
   const [selectedProject, setSelectedProject] = useState<FeaturedProject | null>(null);
 
@@ -20,10 +21,18 @@ export default function App() {
     const fetchData = async () => {
       try {
         const res = await fetch("/api/portfolio");
+        if (!res.ok) {
+          const errText = await res.text();
+          throw new Error(`HTTP ${res.status}: ${errText.slice(0, 50)}`);
+        }
         const json = await res.json();
+        if (json.error) {
+          throw new Error(json.error);
+        }
         setData(json);
       } catch (err) {
-        console.error("Failed to fetch portfolio data", err);
+        console.error("Failed to fetch portfolio data:", err);
+        setError(err instanceof Error ? err.message : "An unknown error occurred");
       } finally {
         setLoading(false);
       }
@@ -58,7 +67,20 @@ export default function App() {
     );
   }
 
-  if (!data) return <div className="text-black p-20 text-center">Failed to load portfolio.</div>;
+  if (!data) {
+    return (
+      <div className="text-black p-20 text-center flex flex-col items-center gap-4">
+        <p className="text-xl font-bold">Failed to load portfolio.</p>
+        {error && <p className="text-sm text-red-500 opacity-70 bg-red-50 p-4 rounded border border-red-100">{error}</p>}
+        <button 
+          onClick={() => window.location.reload()}
+          className="mt-4 px-6 py-2 bg-black text-white rounded-full text-xs uppercase tracking-widest hover:bg-gold transition-colors"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-bg text-black min-h-screen">
